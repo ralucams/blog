@@ -1,6 +1,8 @@
 import React from 'react';
 import {PostCard} from './components/PostCard';
 import {AddCard} from './components/AddCard';
+import axios from 'axios';
+
 import uuid from 'react-uuid';
 
 import './App.scss';
@@ -19,42 +21,33 @@ class Homepage extends React.Component {
 
     // fetch the posts from the API
     componentDidMount() {
-        fetch("http://localhost:3000/posts")
-        .then(res => res.json()
-        .then(
-            (result) => {
-                this.setState({
-                    posts: result
-                })
-            },
-            (error) => {
-                console.log(error);
-            }
-        )
-      )}
+        axios.get("http://localhost:3000/posts")
+        .then(res => {
+          const result = res.data
+          this.setState({ posts: result });
+        })
+    }
 
       // on submit update the posts list with API call and refresh the page
       handleSubmit(event) {
-          const newPost = {
+          const post = {
             id: uuid(),
             title: event.target.postTitle.value,
             text: event.target.postContent.value,
             category: event.target.postCategory.value
           }
+          const newPost = JSON.stringify({...post })
+
         event.preventDefault();
-        fetch('http://localhost:3000/posts', {
-            method: 'POST',
-            headers:{
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ...newPost
-            })
-        }).then( (result) => {
-            window.location.reload()
+        axios.post("http://localhost:3000/posts",  newPost
+        , { headers:{
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }})
+        .then(res => {
+          console.log(res);
+          window.location.reload()
         })
-       
     }
 
     render() {
@@ -68,7 +61,7 @@ class Homepage extends React.Component {
         // view all of the posts
         if(this.props.type === "all") {
             return (
-                <div>    
+                <div data-testid="all-posts">    
                     <div className="posts-add">
                         <button variant="primary" onClick={ () => this.setState({addModalShow: true})}>Add post</button>
                     </div>
@@ -93,10 +86,10 @@ class Homepage extends React.Component {
         } else {
             //view filtered posts
             return (
-                <div>   
+                <div data-testid="filtered-posts">   
                     <div className="posts-add">
                         <button variant="primary" onClick={ () => this.setState({addModalShow: true})}>Add post</button>
-                    </div>                    
+                    </div>                   
                     <div className="posts" id="posts">
                         {      
                             filteredPosts(this.state.posts, this.props.type)

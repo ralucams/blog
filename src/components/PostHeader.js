@@ -6,8 +6,8 @@ export class PostHeader extends React.Component {
     render() {
         const { title } = this.props;
         return (
-            <header className="posts-card__header">
-                <h4 className="posts-card__title">{title}</h4>
+            <header className="posts-card__header" data-testid="post-header">
+                <h2 className="posts-card__title">{title}</h2>
             </header>
         )
     }

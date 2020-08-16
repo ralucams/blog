@@ -7,18 +7,18 @@ export class Nav extends React.Component {
 
     render() {
         return ( 
-            <nav className="nav">
+            <nav className="nav" data-testid="navbar">
                 <ul className="nav-links">
-                    <Link to="/">
+                    <Link data-testid="home-link" to="/">
                         <li key="all">All</li>
                     </Link>
-                    <Link to="/news">
+                    <Link to="/news" data-testid="news-link">
                         <li key="news">News</li>
                     </Link>
-                    <Link to="/travel">
+                    <Link to="/travel" data-testid="travel-link">
                         <li key="travel">Travel</li>
                     </Link>
-                    <Link to="/development">
+                    <Link to="/development" data-testid="development-link">
                         <li key="development">Development</li>
                     </Link>
                 </ul>
